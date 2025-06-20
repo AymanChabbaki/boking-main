@@ -40,6 +40,17 @@ const ServiceCard = ({ service, onBook, onEdit, onDelete, showActions = false })
     return `${mins}min`;
   };
 
+  // Helper to get full image URL
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    // If already absolute (http/https), return as is
+    if (/^https?:\/\//i.test(url)) return url;
+    // Remove trailing /api if present
+    const apiBase = process.env.REACT_APP_API_URL?.replace(/\/api$/, '') || '';
+    // Ensure no double slashes
+    return `${apiBase}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* SECTION MÉDIA */}
@@ -77,7 +88,7 @@ const ServiceCard = ({ service, onBook, onEdit, onDelete, showActions = false })
               {/* Image */}
               {mediaType === 'images' && (
                 <img
-                  src={currentMedia[selectedMediaIndex]?.url}
+                  src={getImageUrl(currentMedia[selectedMediaIndex]?.url)}
                   alt={currentMedia[selectedMediaIndex]?.alt || service.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
